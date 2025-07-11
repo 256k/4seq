@@ -3,8 +3,12 @@
 --
 -- by 256k
 engine.name = 'PolyPerc'
+MusicUtil = require("musicutil")
 
 local arc4 = arc.connect()
+local mididev = midi.connect()
+local rootNote = 64
+
 -- CONSTANTS
 local PROB_THRESHOLD_LIMIT = 101
 -- ---------
@@ -60,7 +64,7 @@ function init()
         drawRingProbSeq(i)
         -- print(problist[i][playhead[i]])
         if problist[i][playhead[i]] > thold[i] then
-        engine.hz(220 * i)
+        engine.hz(MusicUtil.note_num_to_freq(rootNote) * i)
         end
 
   end
@@ -68,6 +72,12 @@ function init()
   end)
 end
 
+mididev.event = function(data)
+  local d = midi.to_msg(data)
+  if d.type == "note_on" then
+    rootNote = d.note
+  end
+end
 
 function arc.delta(n,d)
   print("THOLD: ", thold[n])
