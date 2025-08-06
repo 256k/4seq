@@ -16,6 +16,10 @@ local problist = {}
 local thold = {}
 local playhead = {}
 
+function refresh()
+  redraw()
+end
+
 function tholdInit(tholdVal)
   for t=1,4 do
     thold[t] = tholdVal
@@ -79,7 +83,7 @@ mididev.event = function(data)
   end
 end
 
-function arc.delta(n,d)
+function arc4.delta(n,d)
   print("THOLD: ", thold[n])
   thold[n] = util.clamp((thold[n] + d / 16 ), 0, PROB_THRESHOLD_LIMIT )
   drawRingProbSeq(n)
@@ -97,3 +101,12 @@ for i=1,64 do
 end
 arc4:refresh()
 end
+
+function redraw()
+screen.clear()
+screen.font_size(24)
+screen.move(10,10)
+screen.text("hello")
+screen.update()
+end
+
